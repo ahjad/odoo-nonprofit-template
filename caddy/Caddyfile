@@ -1,0 +1,22 @@
+{
+	admin off
+	auto_https off
+}
+
+:80 {
+	encode gzip zstd
+
+	@websocket path /websocket /websocket/* /longpolling/*
+	reverse_proxy @websocket odoo:8072
+
+	reverse_proxy odoo:8069
+
+	log {
+		output file /data/access.log {
+			roll_size 10mb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+		format json
+	}
+}

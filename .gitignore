@@ -1,0 +1,29 @@
+# Secrets — generated per deployment, never commit
+.env
+.env.*
+!.env.template
+odoo/config/odoo.conf
+!odoo/config/odoo.conf.template
+
+# Runtime data — bind-mounted volumes for containers
+postgres/data/
+odoo/data/
+caddy/data/
+caddy/config/
+
+# OCA repos — cloned per deployment from the SHAs in oca-versions/
+# (oca-versions/*.sha files ARE committed; the addons themselves are not)
+odoo/addons/*/
+!odoo/addons/.gitkeep
+
+# Build artifacts and editor noise
+*.bak
+*.bak.*
+*.pyc
+__pycache__/
+.DS_Store
+*.swp
+*~
+
+# Backup script logs (if any local invocation)
+*.log
