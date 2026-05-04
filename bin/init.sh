@@ -105,15 +105,20 @@ echo "== creating runtime data directories"
 mkdir -p odoo/data postgres/data caddy/data caddy/config
 
 # ---- 5) Sudo-required ownership fixes -------------------------------------
+#
+# NOTE: odoo/addons is intentionally NOT chowned to uid 100. The Odoo
+# container reads addons via "other" bits (mode 755 owned by deploy),
+# which is sufficient for read-only addon use. Chowning the OCA repos to
+# uid 100 would make git refuse to operate on them as the deploy user
+# ("dubious ownership"), breaking later `git pull` for module updates.
 
 echo ""
 yellow "== sudo step: chowning bind-mount paths to uid 100 (odoo container user)"
 yellow "   you will be prompted for your sudo password"
 sudo chown 100:101 odoo/config/odoo.conf
-sudo chown -R 100:101 odoo/addons
 sudo chown 100:101 odoo/data
 sudo chmod 750 odoo/data
-green "  ok odoo/config/odoo.conf, odoo/addons, odoo/data"
+green "  ok odoo/config/odoo.conf, odoo/data (addons stay deploy-owned by design)"
 
 # ---- 6) Done ---------------------------------------------------------------
 
